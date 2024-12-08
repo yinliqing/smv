@@ -1,0 +1,16 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<div id="app">{{ message }}</div>
+<div id="vuejs"><a href="https://vuejs.org/guide/quick-start.html">quick-start.html</a></div>
+<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    setup() {
+      const message = ref('Hello YinLiQing!')
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+</script>

@@ -1,0 +1,28 @@
+<!-- Vue.js 模板 -->
+<template>
+  <div>
+    <input v-model="name" placeholder="Enter your name">
+    <button @click="greet">Greet</button>
+    <p>{{ greetingMessage }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      name: '',
+      greetingMessage: ''
+    }
+  },
+  methods: {
+    greet() {
+      fetch('/api/greeting?name=' + this.name)
+        .then(response => response.text())
+        .then(message => {
+          this.greetingMessage = message;
+        });
+    }
+  }
+}
+</script>

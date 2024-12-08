@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ylq.msv.blog.mapper.ArticleMapper">
+    <!--按id查询记录，文章表与评论表关联查询-->
+    <select id="findArticleById" resultMap="articleWithComment">
+        SELECT a.*, c.id c_id, c.content c_content, c.author, c.a_id
+        FROM t_article a, t_comment c
+        WHERE a.id = c.a_id AND a.id = #{id}
+    </select>
+
+	<resultMap id="CommentMap" type="com.ylq.msv.blog.bean.Comment">
+	    <id property="id" column="id" jdbcType="INTEGER"/>
+	    <result property="content" column="content" jdbcType="VARCHAR" />
+	    <result property="author" column="author" jdbcType="VARCHAR" />
+	    <result property="aId" column="a_id" jdbcType="INTEGER" />
+	</resultMap>
+
+    <!--结果集，一篇文章对应多个评论构成的集合-->
+    <resultMap id="articleWithComment" type="com.ylq.msv.blog.bean.Article">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <collection property="comments" resultMap="CommentMap">
+            <id property="id" column="c_id"/>
+            <result property="content" column="c_content"/>
+            <result property="author" column="c_author"/>
+            <result property="aId" column="id"/>
+        </collection>
+    </resultMap>
+
+    <!--更新记录-->
+    <update id="updateArticle" parameterType="com.ylq.msv.blog.bean.Article">
+        UPDATE t_article
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>
